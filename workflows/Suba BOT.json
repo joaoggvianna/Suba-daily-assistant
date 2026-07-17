@@ -1,0 +1,80 @@
+{
+  "name": "Suba BOT",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -128,
+        -48
+      ],
+      "id": "778a69cc-ab26-4731-993b-75e8dd786feb",
+      "name": "Telegram Trigger",
+      "webhookId": "67a3891e-4132-42db-af92-e6f35a189a81",
+      "credentials": {
+        "telegramApi": {
+          "id": "WgnkIFeTNFUqvt60",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1719723137",
+        "text": "=Fala João! Tudo bem? Eu sou o Suba e seja bem vindo!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        -48
+      ],
+      "id": "026cd2b3-8375-4d75-9a7b-e01f85b9d6d0",
+      "name": "Send a text message",
+      "webhookId": "bb1c136f-504f-4179-9d27-5b099334786a",
+      "credentials": {
+        "telegramApi": {
+          "id": "WgnkIFeTNFUqvt60",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6bbc5654-78de-42a1-8813-ca79d400f72a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c636c43162c724163ac181d6fcd7adeba164cebfcc7121449e42e3ab90f4048e"
+  },
+  "nodeGroups": [],
+  "id": "m9lKH2ArkaEFqkcW",
+  "tags": []
+}

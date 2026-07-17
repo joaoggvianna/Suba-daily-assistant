@@ -1,0 +1,25 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+
+    ports:
+      - "5678:5678"
+
+    environment:
+      - TZ=America/Sao_Paulo
+      - N8N_SECURE_COOKIE=false
+      - N8N_HOST=submerge-harmonics-headlamp.ngrok-free.dev
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://submerge-harmonics-headlamp.ngrok-free.dev/
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+    external: true
+    name: n8n_n8n_data
+
+
