@@ -4,13 +4,19 @@ Assistente pessoal de produtividade "gamificada", inspirado no conceito de *leve
 
 ## Status atual
 
-🟡 **Em desenvolvimento — Fase 2**
+🟡 **Em desenvolvimento — Fase 3**
 
 - [x] Fase 1 — Bot básico (Telegram Trigger + Send Message funcionando)
-- [ ] Fase 2 — IA (AI Agent + Gemini)
+- [x] Fase 2 — IA (AI Agent + Gemini, personalidade do Suba definida via System Prompt)
 - [ ] Fase 3 — Rotina (Schedule Trigger 09h/20h)
 - [ ] Fase 4 — Memória (PostgreSQL)
 - [ ] Fase 5 — Ferramentas (Google Calendar, GitHub, Strava, Notion, Gmail)
+
+### Notas da Fase 2
+
+- Modelo utilizado: `gemini-flash-lite-latest` (outros modelos como `gemini-2.0-flash` e `gemini-1.5-flash` retornaram erro de cota `429` na camada gratuita)
+- O System Prompt define identidade, tom de voz e comportamento do Suba nos 3 momentos do dia (planejamento matinal, acompanhamento, revisão noturna)
+- ⚠️ **Sem memória persistente ainda**: cada mensagem dispara uma execução independente do workflow. O Suba pode parecer "lembrar" do contexto dentro da mesma sessão de chat, mas nenhum dado é salvo entre execuções — isso será resolvido na Fase 4.
 
 ## Visão do produto
 
