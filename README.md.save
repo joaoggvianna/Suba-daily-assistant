@@ -1,0 +1,30 @@
+# Suba — Daily Assistant 🚀
+
+Assistente pessoal de produtividade "gamificada", inspirado no conceito de *level up* (referência ao "Arise" de Solo Leveling). O agente acompanha o usuário durante o dia via Telegram: define metas pela manhã, conversa ao longo do dia, e fecha com uma revisão/score à noite.
+
+## Status atual
+
+🟡 **Em desenvolvimento — Fase 2**
+
+- [x] Fase 1 — Bot básico (Telegram Trigger + Send Message funcionando)
+- [ ] Fase 2 — IA (AI Agent + Gemini)
+- [ ] Fase 3 — Rotina (Schedule Trigger 09h/20h)
+- [ ] Fase 4 — Memória (PostgreSQL)
+- [ ] Fase 5 — Ferramentas (Google Calendar, GitHub, Strava, Notion, Gmail)
+
+## Visão do produto
+
+**Fluxo principal:**
+
+- **09:00 — Planejamento do dia**: o agente pergunta as metas do dia e salva.
+- **Durante o dia**: conversa livre via Telegram; o agente entende contexto, atualiza tarefas e registra informações.
+- **20:00 — Fechamento do dia**: revisão com metas concluídas/pendentes, análise, score de 0-100, pontos positivos e pontos de melhoria.
+
+## Stack
+
+| Camada | Ferramenta |
+|---|---|
+| Orquestração | [n8n](https://n8n.io) (self-hosted via Docker) |
+| Interface | Telegram Bot |
+| Modelo de IA | Gemini API (gratuita, inicialmente) |
+| Banco de dados | PostgreSQL (planejado — F

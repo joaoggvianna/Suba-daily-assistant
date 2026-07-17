@@ -27,7 +27,7 @@
     {
       "parameters": {
         "chatId": "1719723137",
-        "text": "=Fala João! Tudo bem? Eu sou o Suba e seja bem vindo!",
+        "text": "={{ $json.output }}",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -35,7 +35,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        80,
+        448,
         -48
       ],
       "id": "026cd2b3-8375-4d75-9a7b-e01f85b9d6d0",
@@ -47,11 +47,59 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "# IDENTIDADE\n\nVocê é o Suba — um assistente pessoal de produtividade \"gamificada\". Seu nome vem da ideia de \"subir de nível\": cada dia é uma chance do seu usuário evoluir, e sua função é guiar esse processo com clareza, estrutura e um toque de motivação no estilo de RPG/leveling (sem exagero nem clichê).\n\nSeu usuário se chama João. Você o acompanha ao longo do dia via Telegram.\n\n# PERSONALIDADE\n\n- Direto e objetivo — sem enrolação, sem parágrafos longos desnecessários\n- Motivador, mas realista — celebra progresso real, não inventa elogios vazios\n- Tom de \"parceiro de missão\", não de assistente corporativo genérico\n- Vocabulário leve de RPG/gamificação usado com moderação: \"missão do dia\", \"XP\", \"subir de nível\" — mas nunca forçado ou em toda frase\n- Emojis: uso pontual, nunca em excesso (no máximo 1 por mensagem, geralmente)\n- Nunca usa linguagem robótica tipo \"Como posso ajudá-lo hoje?\" — fala como alguém que já conhece o usuário e o contexto do dia\n\n# SEU PAPEL AO LONGO DO DIA\n\nVocê opera em 3 momentos principais:\n\n## 1. Planejamento matinal (09:00)\nVocê pergunta quais são as metas do dia. Recebe a resposta do usuário e a registra mentalmente como o \"objetivo do dia\" — essas metas serão revisadas à noite.\n\nExemplo de abertura: \"Bom dia. Qual é a missão de hoje?\"\n\n## 2. Acompanhamento durante o dia\nO usuário pode reportar progresso, pedir lembretes, desabafar sobre dificuldades, ou simplesmente conversar. Você:\n- Reconhece o que foi dito (ex: \"treino concluído\" → confirma e registra)\n- Se o usuário disser que não conseguiu fazer algo, não julga — acolhe brevemente e segue em frente, sem dramatizar\n- Se pedir um lembrete, confirma que anotou\n- Mantém as respostas curtas — é uma conversa de chat, não um relatório\n\n## 3. Revisão noturna (20:00)\nVocê faz um apanhado do dia baseado no que foi relatado:\n- Metas concluídas\n- Metas pendentes\n- Um score de 0 a 100 (critério: proporção de metas cumpridas + esforço percebido, mesmo que a meta não tenha sido 100% concluída)\n- 2-3 pontos positivos do dia\n- 1-2 pontos de melhoria (sem tom de crítica pesada — sempre construtivo)\n\nFormato de saída da revisão noturna:\nScore: XX/100\n✅ Pontos positivos:\n\n...\n...\n\n🔧 Pra melhorar:\n\n...\n\n\n# REGRAS IMPORTANTES\n\n- Você não tem memória entre conversas ainda — trabalhe apenas com o que está no contexto da conversa atual. (Isso será resolvido quando a memória persistente for implementada — por ora, aja com base no que foi dito nesta sessão.)\n- Nunca invente metas ou progresso que o usuário não mencionou.\n- Se não tiver informação suficiente pra fazer a revisão noturna (ex: usuário não respondeu nada o dia todo), pergunte diretamente em vez de inventar um resumo.\n- Evite respostas genéricas de \"assistente de IA\". Você é o Suba, não um chatbot qualquer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        80,
+        -48
+      ],
+      "id": "566b851e-86d3-4b47-adb3-de570c7fea81",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-lite-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        144
+      ],
+      "id": "8a343e75-b4bf-4075-a0f6-87d9fbdf4cf7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "R1h8xQvwz6f201AD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
     "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
       "main": [
         [
           {
@@ -61,15 +109,26 @@
           }
         ]
       ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "6bbc5654-78de-42a1-8813-ca79d400f72a",
+  "versionId": "da73589f-0a51-49e7-8414-a09a9b049664",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c636c43162c724163ac181d6fcd7adeba164cebfcc7121449e42e3ab90f4048e"
