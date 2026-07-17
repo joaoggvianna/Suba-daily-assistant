@@ -8,7 +8,7 @@ Assistente pessoal de produtividade "gamificada", inspirado no conceito de *leve
 
 - [x] Fase 1 — Bot básico (Telegram Trigger + Send Message funcionando)
 - [x] Fase 2 — IA (AI Agent + Gemini, personalidade do Suba definida via System Prompt)
-- [ ] Fase 3 — Rotina (Schedule Trigger 09h/20h)
+- [x] Fase 3 — Rotina (Schedule Trigger 09h/20h)
 - [ ] Fase 4 — Memória (PostgreSQL)
 - [ ] Fase 5 — Ferramentas (Google Calendar, GitHub, Strava, Notion, Gmail)
 
@@ -18,6 +18,10 @@ Assistente pessoal de produtividade "gamificada", inspirado no conceito de *leve
 - O System Prompt define identidade, tom de voz e comportamento do Suba nos 3 momentos do dia (planejamento matinal, acompanhamento, revisão noturna)
 - ⚠️ **Sem memória persistente ainda**: cada mensagem dispara uma execução independente do workflow. O Suba pode parecer "lembrar" do contexto dentro da mesma sessão de chat, mas nenhum dado é salvo entre execuções — isso será resolvido na Fase 4.
 
+### Notas da Fase 3
+
+- Dois `Schedule Trigger` adicionados ao mesmo workflow principal (não em workflows separados): um às 09:00 (planejamento) e outro às 20:00 (revisão noturna), cada um conectado ao seu próprio node de Send Message.
+- ⚠️ **Revisão noturna ainda simplificada**: como não há memória persistente (Fase 4), o fluxo das 20h pede que o próprio usuário resuma o dia na hora, e o AI Agent gera a análise/score a partir dessa resposta — não a partir de um histórico real das metas/relatos ao longo do dia. Isso será aprimorado quando o PostgreSQL for implementado.
 ## Visão do produto
 
 **Fluxo principal:**
