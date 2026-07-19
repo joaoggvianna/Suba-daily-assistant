@@ -9,7 +9,7 @@ Assistente pessoal de produtividade "gamificada", inspirado no conceito de *leve
 - [x] Fase 1 — Bot básico (Telegram Trigger + Send Message funcionando)
 - [x] Fase 2 — IA (AI Agent + Gemini, personalidade do Suba definida via System Prompt)
 - [x] Fase 3 — Rotina (Schedule Trigger 09h/20h)
-- [ ] Fase 4 — Memória (PostgreSQL)
+- [x] Fase 4 — Memória (PostgreSQL)
 - [ ] Fase 5 — Ferramentas (Google Calendar, GitHub, Strava, Notion, Gmail)
 
 ### Notas da Fase 2
@@ -22,6 +22,45 @@ Assistente pessoal de produtividade "gamificada", inspirado no conceito de *leve
 
 - Dois `Schedule Trigger` adicionados ao mesmo workflow principal (não em workflows separados): um às 09:00 (planejamento) e outro às 20:00 (revisão noturna), cada um conectado ao seu próprio node de Send Message.
 - ⚠️ **Revisão noturna ainda simplificada**: como não há memória persistente (Fase 4), o fluxo das 20h pede que o próprio usuário resuma o dia na hora, e o AI Agent gera a análise/score a partir dessa resposta — não a partir de um histórico real das metas/relatos ao longo do dia. Isso será aprimorado quando o PostgreSQL for implementado.
+
+### Notas da Fase 4 (em andamento)
+
+**Infraestrutura:**
+- Serviço `postgres` (imagem `postgres:16`) adicionado ao `docker-compose.yml`, com volume próprio (`postgres_data`)
+- Banco: `suba_db` / Usuário: `suba` (credenciais de desenvolvimento local, não usar em produção)
+
+**Tabelas criadas:**
+```sql
+CREATE TABLE IF NOT EXISTS metas_diarias (
+    id SERIAL PRIMARY KEY,
+    data DATE NOT NULL,
+    descricao TEXT NOT NULL,
+    concluida BOOLEAN DEFAULT FALSE,
+    criado_em TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS revisoes_diarias (
+    id SERIAL PRIMARY KEY,
+    data DATE NOT NULL UNIQUE,
+    score INTEGER,
+    pontos_positivos TEXT,
+    pontos_melhoria TEXT,
+    resumo_usuario TEXT,
+    criado_em TIMESTAMP DEFAULT NOW()
+);
+```
+
+**Memória de conversa:** Node `Postgres Chat Memory` conectado ao AI Agent principal, usando `{{ $json.message.chat.id }}` como Session ID e `n8n_chat_histories` como tabela (criada automaticamente pelo node). Testado e confirmado: o Suba lembra de informações entre mensagens separadas.
+
+**Pipeline de extração de metas:** Um segundo AI Agent ("Extrator de Metas"), conectado em paralelo ao Telegram Trigger, analisa cada mensagem e retorna um JSON estruturado (`{"tem_metas": bool, "metas": [...]}`) via Structured Output Parser. Fluxo completo:
+Telegram Trigger → Extrator de Metas → If (tem_metas == true) → Split Out (output.metas) → Postgres Insert (metas_diarias)
+Validado: cada mensagem com metas gera uma linha por meta na tabela, sem sobrescrever metas de mensagens anteriores no mesmo dia.
+
+**Pendente para concluir a Fase 4:**
+- [ ] Conectar o fluxo das 20h a uma query `SELECT` real na tabela `metas_diarias` (filtrando por `data = CURRENT_DATE`), para a revisão noturna usar dados reais do dia em vez de depender só do resumo que o usuário digitar na hora
+- [ ] Implementar lógica para marcar uma meta como `concluida = true` quando o usuário relatar que terminou algo (via `Postgres Update`)
+- [ ] Popular e usar a tabela `revisoes_diarias` para registrar o histórico de scores ao longo do tempo
+
 ## Visão do produto
 
 **Fluxo principal:**
